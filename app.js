@@ -1,3 +1,5 @@
+var c = document.getElementById('c');
+
 var w = c.width = window.innerWidth,
 		h = c.height = window.innerHeight,
 		ctx = c.getContext( '2d' ),
@@ -6,14 +8,14 @@ var w = c.width = window.innerWidth,
 		hh = h / 2,
 		
 		opts = {
-    strings: [ 'FELIZ', 'CUMPLE', '', 'CRIS♥' ],
-    charSize: 30,
-    charSpacing: 35,
-    lineHeight: 55,
+			strings: [ 'FELIZ', 'CUMPLE', '', 'CRIS♥' ],
+			charSize: 30,
+			charSpacing: 35,
+			lineHeight: 55,
 
-    bigText: '26',
-    bigTextSize: 70,
-    bigTextY: 30,
+			bigText: '26',
+			bigTextSize: 70,
+			bigTextY: 30,
 			
 			cx: w / 2,
 			cy: h / 2,
@@ -80,6 +82,7 @@ function Letter( char, x, y ){
 	
 	this.reset();
 }
+
 Letter.prototype.reset = function(){
 	
 	this.phase = 'firework';
@@ -90,6 +93,7 @@ Letter.prototype.reset = function(){
 	this.lineWidth = opts.fireworkBaseLineWidth + opts.fireworkAddedLineWidth * Math.random();
 	this.prevPoints = [ [ 0, hh, 0 ] ];
 }
+
 Letter.prototype.step = function(){
 	
 	if( this.phase === 'firework' ){
@@ -303,6 +307,7 @@ Letter.prototype.step = function(){
 		}
 	}
 }
+
 function Shard( x, y, vx, vy, color ){
 	
 	var vel = opts.fireworkShardBaseVel + opts.fireworkShardAddedVel * Math.random();
@@ -320,6 +325,7 @@ function Shard( x, y, vx, vy, color ){
 	
 	this.size = opts.fireworkShardBaseSize + opts.fireworkShardAddedSize * Math.random();
 }
+
 Shard.prototype.step = function(){
 	
 	this.x += this.vx;
@@ -349,6 +355,7 @@ Shard.prototype.step = function(){
 	if( this.prevPoints[ 0 ][ 1 ] > hh )
 		this.alive = false;
 }
+
 function generateBalloonPath( x, y, size ){
 	
 	ctx.moveTo( x, y );
@@ -376,6 +383,15 @@ function anim(){
 		if( letters[ l ].phase !== 'done' )
 			done = false;
 	}
+
+	// Número grande entre CUMPLE y CRIS
+	ctx.save();
+	ctx.font = opts.bigTextSize + 'px Verdana';
+	ctx.fillStyle = '#fff';
+	ctx.textAlign = 'center';
+	ctx.textBaseline = 'middle';
+	ctx.fillText( opts.bigText, 0, opts.bigTextY );
+	ctx.restore();
 	
 	ctx.translate( -hw, -hh );
 	
