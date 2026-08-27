@@ -2,14 +2,23 @@ html,
 body {
     margin: 0;
     padding: 0;
+
     width: 100%;
     height: 100%;
+
     overflow: hidden;
+
     background: #111;
 }
 
-canvas {
+
+/* =========================
+   CANVAS
+   ========================= */
+
+#c {
     position: absolute;
+
     top: 0;
     left: 0;
 
@@ -18,6 +27,11 @@ canvas {
 
     z-index: 1;
 }
+
+
+/* =========================
+   NÚMERO 26
+   ========================= */
 
 #edad {
     position: fixed;
@@ -47,21 +61,29 @@ canvas {
     -webkit-text-fill-color: transparent;
     color: transparent;
 
-    z-index: 9999;
-
     pointer-events: none;
 
+    z-index: 9999;
+
+    /* MUY IMPORTANTE:
+       empieza completamente oculto */
     opacity: 0;
 
     transition:
         opacity 0.5s ease,
-        top 2.5s ease,
-        transform 2.5s ease;
+        top 2.7s ease,
+        transform 2.7s ease;
 }
+
+
+/* Cuando ya se formaron las letras */
 
 #edad.visible {
     opacity: 1;
 }
+
+
+/* Cuando empiezan los globos */
 
 #edad.volando {
     opacity: 0;
@@ -70,5 +92,5 @@ canvas {
 
     transform:
         translate(-50%, -50%)
-        scale(0.8);
+        scale(0.75);
 }
