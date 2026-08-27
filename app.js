@@ -1,5 +1,42 @@
 var c = document.getElementById('c');
 
+// ======================================================
+// NÚMERO 26
+// Se crea desde JavaScript para garantizar que sea visible
+// ======================================================
+
+var edad = document.createElement('div');
+
+edad.textContent = '26';
+
+edad.style.position = 'fixed';
+edad.style.left = '50%';
+edad.style.top = 'calc(50% + 28px)';
+edad.style.transform = 'translate(-50%, -50%)';
+
+edad.style.fontFamily = 'Verdana, sans-serif';
+edad.style.fontSize = '75px';
+edad.style.fontWeight = 'bold';
+
+edad.style.background =
+	'linear-gradient(90deg, #8c63ff, #f060cf, #ff8b63, #f2e767, #73e66f, #66e4db)';
+
+edad.style.webkitBackgroundClip = 'text';
+edad.style.backgroundClip = 'text';
+
+edad.style.webkitTextFillColor = 'transparent';
+edad.style.color = 'transparent';
+
+edad.style.zIndex = '9999';
+edad.style.pointerEvents = 'none';
+
+document.body.appendChild(edad);
+
+
+// ======================================================
+// CANVAS
+// ======================================================
+
 var w = c.width = window.innerWidth,
 	h = c.height = window.innerHeight,
 	ctx = c.getContext('2d'),
@@ -65,12 +102,14 @@ var w = c.width = window.innerWidth,
 	},
 
 	calc = {
+
 		totalWidth:
 			opts.charSpacing *
 			Math.max(
 				opts.strings[0].length,
 				opts.strings[1].length
 			)
+
 	},
 
 	Tau = Math.PI * 2,
@@ -81,6 +120,10 @@ var w = c.width = window.innerWidth,
 
 ctx.font = opts.charSize + 'px Verdana';
 
+
+// ======================================================
+// LETRAS
+// ======================================================
 
 function Letter(char, x, y) {
 
@@ -98,23 +141,27 @@ function Letter(char, x, y) {
 
 	this.color =
 		'hsl(hue,80%,50%)'
-		.replace('hue', hue);
+			.replace('hue', hue);
 
 	this.lightAlphaColor =
 		'hsla(hue,80%,light%,alp)'
-		.replace('hue', hue);
+			.replace('hue', hue);
 
 	this.lightColor =
 		'hsl(hue,80%,light%)'
-		.replace('hue', hue);
+			.replace('hue', hue);
 
 	this.alphaColor =
 		'hsla(hue,80%,50%,alp)'
-		.replace('hue', hue);
+			.replace('hue', hue);
 
 	this.reset();
 }
 
+
+// ======================================================
+// RESET LETRAS
+// ======================================================
 
 Letter.prototype.reset = function() {
 
@@ -141,8 +188,13 @@ Letter.prototype.reset = function() {
 	this.prevPoints = [
 		[0, hh, 0]
 	];
+
 };
 
+
+// ======================================================
+// ANIMACIÓN DE LAS LETRAS
+// ======================================================
 
 Letter.prototype.step = function() {
 
@@ -156,6 +208,7 @@ Letter.prototype.step = function() {
 
 				this.tick = 0;
 				this.spawned = true;
+
 			}
 
 		} else {
@@ -163,13 +216,13 @@ Letter.prototype.step = function() {
 			++this.tick;
 
 			var linearProportion =
-				this.tick / this.reachTime,
+					this.tick / this.reachTime,
 
 				armonicProportion =
-				Math.sin(
-					linearProportion *
-					TauQuarter
-				),
+					Math.sin(
+						linearProportion *
+						TauQuarter
+					),
 
 				x =
 					linearProportion *
@@ -187,14 +240,18 @@ Letter.prototype.step = function() {
 			) {
 
 				this.prevPoints.shift();
+
 			}
 
 
 			this.prevPoints.push([
+
 				x,
 				y,
+
 				linearProportion *
 				this.lineWidth
+
 			]);
 
 
@@ -210,19 +267,16 @@ Letter.prototype.step = function() {
 			) {
 
 				var point =
-					this.prevPoints[i],
+						this.prevPoints[i],
 
 					point2 =
-						this.prevPoints[
-							i - 1
-						];
+						this.prevPoints[i - 1];
 
 
 				ctx.strokeStyle =
 					this.alphaColor.replace(
 						'alp',
-						i /
-						this.prevPoints.length
+						i / this.prevPoints.length
 					);
 
 
@@ -245,6 +299,7 @@ Letter.prototype.step = function() {
 				);
 
 				ctx.stroke();
+
 			}
 
 
@@ -253,8 +308,7 @@ Letter.prototype.step = function() {
 				this.reachTime
 			) {
 
-				this.phase =
-					'contemplate';
+				this.phase = 'contemplate';
 
 
 				this.circleFinalSize =
@@ -269,11 +323,8 @@ Letter.prototype.step = function() {
 					Math.random() | 0;
 
 
-				this.circleCreating =
-					true;
-
-				this.circleFading =
-					false;
+				this.circleCreating = true;
+				this.circleFading = false;
 
 
 				this.circleFadeTime =
@@ -289,13 +340,12 @@ Letter.prototype.step = function() {
 
 
 				var shardCount =
-					opts.fireworkBaseShards +
-					opts.fireworkAddedShards *
-					Math.random() | 0,
+						opts.fireworkBaseShards +
+						opts.fireworkAddedShards *
+						Math.random() | 0,
 
 					angle =
-						Tau /
-						shardCount,
+						Tau / shardCount,
 
 					cos =
 						Math.cos(angle),
@@ -304,7 +354,6 @@ Letter.prototype.step = function() {
 						Math.sin(angle),
 
 					x = 1,
-
 					y = 0;
 
 
@@ -334,14 +383,18 @@ Letter.prototype.step = function() {
 							y,
 							this.alphaColor
 						)
+
 					);
+
 				}
+
 			}
+
 		}
 
+
 	} else if (
-		this.phase ===
-		'contemplate'
+		this.phase === 'contemplate'
 	) {
 
 		++this.tick;
@@ -355,8 +408,8 @@ Letter.prototype.step = function() {
 
 
 			var proportion =
-				this.tick2 /
-				this.circleCompleteTime,
+					this.tick2 /
+					this.circleCompleteTime,
 
 				armonic =
 					-Math.cos(
@@ -370,12 +423,14 @@ Letter.prototype.step = function() {
 
 			ctx.fillStyle =
 				this.lightAlphaColor
+
 					.replace(
 						'light',
 						50 +
 						50 *
 						proportion
 					)
+
 					.replace(
 						'alp',
 						proportion
@@ -385,11 +440,14 @@ Letter.prototype.step = function() {
 			ctx.arc(
 				this.x,
 				this.y,
+
 				armonic *
 				this.circleFinalSize,
+
 				0,
 				Tau
 			);
+
 
 			ctx.fill();
 
@@ -401,11 +459,9 @@ Letter.prototype.step = function() {
 
 				this.tick2 = 0;
 
-				this.circleCreating =
-					false;
+				this.circleCreating = false;
+				this.circleFading = true;
 
-				this.circleFading =
-					true;
 			}
 
 
@@ -431,8 +487,8 @@ Letter.prototype.step = function() {
 
 
 			var proportion =
-				this.tick2 /
-				this.circleFadeTime,
+					this.tick2 /
+					this.circleFadeTime,
 
 				armonic =
 					-Math.cos(
@@ -446,10 +502,12 @@ Letter.prototype.step = function() {
 
 			ctx.fillStyle =
 				this.lightAlphaColor
+
 					.replace(
 						'light',
 						100
 					)
+
 					.replace(
 						'alp',
 						1 - armonic
@@ -457,12 +515,17 @@ Letter.prototype.step = function() {
 
 
 			ctx.arc(
+
 				this.x,
 				this.y,
+
 				this.circleFinalSize,
+
 				0,
 				Tau
+
 			);
+
 
 			ctx.fill();
 
@@ -472,8 +535,8 @@ Letter.prototype.step = function() {
 				this.circleFadeTime
 			) {
 
-				this.circleFading =
-					false;
+				this.circleFading = false;
+
 			}
 
 
@@ -491,6 +554,7 @@ Letter.prototype.step = function() {
 				this.x + this.dx,
 				this.y + this.dy
 			);
+
 		}
 
 
@@ -507,13 +571,12 @@ Letter.prototype.step = function() {
 				!this.shards[i].alive
 			) {
 
-				this.shards.splice(
-					i,
-					1
-				);
+				this.shards.splice(i, 1);
 
 				--i;
+
 			}
+
 		}
 
 
@@ -522,20 +585,17 @@ Letter.prototype.step = function() {
 			opts.letterContemplatingWaitTime
 		) {
 
-			this.phase =
-				'balloon';
+			this.phase = 'balloon';
 
 			this.tick = 0;
 
-			this.spawning =
-				true;
+			this.spawning = true;
 
 			this.spawnTime =
 				opts.balloonSpawnTime *
 				Math.random() | 0;
 
-			this.inflating =
-				false;
+			this.inflating = false;
 
 			this.inflateTime =
 				opts.balloonBaseInflateTime +
@@ -549,9 +609,9 @@ Letter.prototype.step = function() {
 
 
 			var rad =
-				opts.balloonBaseRadian +
-				opts.balloonAddedRadian *
-				Math.random(),
+					opts.balloonBaseRadian +
+					opts.balloonAddedRadian *
+					Math.random(),
 
 				vel =
 					opts.balloonBaseVel +
@@ -561,17 +621,17 @@ Letter.prototype.step = function() {
 
 			this.vx =
 				Math.cos(rad) *
-				vel;
+					vel;
 
 			this.vy =
 				Math.sin(rad) *
-				vel;
+					vel;
+
 		}
 
 
 	} else if (
-		this.phase ===
-		'balloon'
+		this.phase === 'balloon'
 	) {
 
 		ctx.strokeStyle =
@@ -609,11 +669,9 @@ Letter.prototype.step = function() {
 
 				this.tick = 0;
 
-				this.spawning =
-					false;
+				this.spawning = false;
+				this.inflating = true;
 
-				this.inflating =
-					true;
 			}
 
 
@@ -625,18 +683,18 @@ Letter.prototype.step = function() {
 
 
 			var proportion =
-				this.tick /
-				this.inflateTime,
+					this.tick /
+					this.inflateTime,
 
 				x =
 					this.cx =
-					this.x,
+						this.x,
 
 				y =
 					this.cy =
-					this.y -
-					this.size *
-					proportion;
+						this.y -
+						this.size *
+						proportion;
 
 
 			ctx.fillStyle =
@@ -648,12 +706,17 @@ Letter.prototype.step = function() {
 
 			ctx.beginPath();
 
+
 			generateBalloonPath(
+
 				x,
 				y,
+
 				this.size *
 					proportion
+
 			);
+
 
 			ctx.fill();
 
@@ -691,19 +754,18 @@ Letter.prototype.step = function() {
 
 				this.tick = 0;
 
-				this.inflating =
-					false;
+				this.inflating = false;
+
 			}
 
 
 		} else {
 
-			this.cx +=
-				this.vx;
+			this.cx += this.vx;
 
 			this.cy +=
 				this.vy +=
-				opts.upFlow;
+					opts.upFlow;
 
 
 			ctx.fillStyle =
@@ -732,8 +794,7 @@ Letter.prototype.step = function() {
 
 			ctx.lineTo(
 				this.cx,
-				this.cy +
-				this.size
+				this.cy + this.size
 			);
 
 			ctx.stroke();
@@ -748,35 +809,44 @@ Letter.prototype.step = function() {
 
 			ctx.fillText(
 				this.char,
+
 				this.cx +
-				this.dx,
+					this.dx,
 
 				this.cy +
-				this.dy +
-				this.size
+					this.dy +
+					this.size
 			);
 
 
 			if (
+
 				this.cy +
-				this.size <
-				-hh ||
+					this.size <
+					-hh ||
 
 				this.cx <
-				-hw ||
+					-hw ||
 
 				this.cy >
-				hw
+					hw
+
 			) {
 
-				this.phase =
-					'done';
+				this.phase = 'done';
+
 			}
+
 		}
+
 	}
-}
+
+};
 
 
+// ======================================================
+// PARTÍCULAS
+// ======================================================
 
 function Shard(
 	x,
@@ -789,7 +859,7 @@ function Shard(
 	var vel =
 		opts.fireworkShardBaseVel +
 		opts.fireworkShardAddedVel *
-		Math.random();
+			Math.random();
 
 
 	this.vx =
@@ -808,109 +878,108 @@ function Shard(
 	];
 
 
-	this.color =
-		color;
+	this.color = color;
 
-
-	this.alive =
-		true;
+	this.alive = true;
 
 
 	this.size =
 		opts.fireworkShardBaseSize +
 		opts.fireworkShardAddedSize *
-		Math.random();
+			Math.random();
+
 }
 
 
+Shard.prototype.step = function() {
 
-Shard.prototype.step =
-	function() {
+	this.x += this.vx;
 
-		this.x +=
-			this.vx;
-
-		this.y +=
-			this.vy +=
-				opts.gravity;
+	this.y +=
+		this.vy +=
+			opts.gravity;
 
 
-		if (
-			this.prevPoints.length >
-			opts.fireworkShardPrevPoints
-		) {
+	if (
+		this.prevPoints.length >
+		opts.fireworkShardPrevPoints
+	) {
 
-			this.prevPoints.shift();
-		}
+		this.prevPoints.shift();
 
-
-		this.prevPoints.push([
-			this.x,
-			this.y
-		]);
+	}
 
 
-		var lineWidthProportion =
-			this.size /
-			this.prevPoints.length;
+	this.prevPoints.push([
+		this.x,
+		this.y
+	]);
 
 
-		for (
-			var k = 0;
-			k <
-			this.prevPoints.length - 1;
-			++k
-		) {
+	var lineWidthProportion =
+		this.size /
+		this.prevPoints.length;
 
-			var point =
+
+	for (
+		var k = 0;
+		k <
+		this.prevPoints.length - 1;
+		++k
+	) {
+
+		var point =
 				this.prevPoints[k],
 
-				point2 =
-					this.prevPoints[
-						k + 1
-					];
+			point2 =
+				this.prevPoints[k + 1];
 
 
-			ctx.strokeStyle =
-				this.color.replace(
-					'alp',
-					k /
-					this.prevPoints.length
-				);
-
-
-			ctx.lineWidth =
-				k *
-				lineWidthProportion;
-
-
-			ctx.beginPath();
-
-			ctx.moveTo(
-				point[0],
-				point[1]
+		ctx.strokeStyle =
+			this.color.replace(
+				'alp',
+				k /
+				this.prevPoints.length
 			);
 
-			ctx.lineTo(
-				point2[0],
-				point2[1]
-			);
 
-			ctx.stroke();
-		}
+		ctx.lineWidth =
+			k *
+			lineWidthProportion;
 
 
-		if (
-			this.prevPoints[0][1] >
-			hh
-		) {
+		ctx.beginPath();
 
-			this.alive =
-				false;
-		}
-	};
+		ctx.moveTo(
+			point[0],
+			point[1]
+		);
+
+		ctx.lineTo(
+			point2[0],
+			point2[1]
+		);
+
+		ctx.stroke();
+
+	}
 
 
+	if (
+		this.prevPoints[0][1] >
+		hh
+	) {
+
+		this.alive = false;
+
+	}
+
+};
+
+
+// ======================================================
+// GLOBOS
+// ======================================================
 
 function generateBalloonPath(
 	x,
@@ -934,6 +1003,7 @@ function generateBalloonPath(
 
 		x,
 		y - size
+
 	);
 
 
@@ -947,20 +1017,22 @@ function generateBalloonPath(
 
 		x,
 		y
+
 	);
+
 }
 
 
+// ======================================================
+// ANIMACIÓN PRINCIPAL
+// ======================================================
 
 function anim() {
 
-	window.requestAnimationFrame(
-		anim
-	);
+	window.requestAnimationFrame(anim);
 
 
-	ctx.fillStyle =
-		'#111';
+	ctx.fillStyle = '#111';
 
 
 	ctx.fillRect(
@@ -977,8 +1049,7 @@ function anim() {
 	);
 
 
-	var done =
-		true;
+	var done = true;
 
 
 	for (
@@ -995,98 +1066,17 @@ function anim() {
 			'done'
 		) {
 
-			done =
-				false;
+			done = false;
+
 		}
+
 	}
-
-
-
-	/* ==========================
-	   NÚMERO 26
-	   ========================== */
-
-
-	ctx.save();
-
-
-	ctx.font =
-		'bold 75px Verdana';
-
-
-	ctx.textAlign =
-		'center';
-
-
-	ctx.textBaseline =
-		'middle';
-
-
-
-	/* DEGRADADO DEL 26 */
-
-	var gradient =
-		ctx.createLinearGradient(
-			-60,
-			0,
-			60,
-			0
-		);
-
-
-	gradient.addColorStop(
-		0,
-		'#8c63ff'
-	);
-
-	gradient.addColorStop(
-		0.20,
-		'#f060cf'
-	);
-
-	gradient.addColorStop(
-		0.40,
-		'#ff8b63'
-	);
-
-	gradient.addColorStop(
-		0.60,
-		'#f2e767'
-	);
-
-	gradient.addColorStop(
-		0.80,
-		'#73e66f'
-	);
-
-	gradient.addColorStop(
-		1,
-		'#66e4db'
-	);
-
-
-	ctx.fillStyle =
-		gradient;
-
-
-	/* POSICIÓN DEL 26 */
-
-	ctx.fillText(
-		'26',
-		0,
-		28
-	);
-
-
-	ctx.restore();
-
 
 
 	ctx.translate(
 		-hw,
 		-hh
 	);
-
 
 
 	if (done) {
@@ -1098,11 +1088,17 @@ function anim() {
 		) {
 
 			letters[l].reset();
+
 		}
+
 	}
+
 }
 
 
+// ======================================================
+// CREAR LAS LETRAS
+// ======================================================
 
 for (
 	var i = 0;
@@ -1125,33 +1121,39 @@ for (
 				j *
 					opts.charSpacing +
 
-				opts.charSpacing /
-					2 -
+				opts.charSpacing / 2 -
 
 				opts.strings[i].length *
-					opts.charSize /
-					2,
+					opts.charSize / 2,
 
 
 				i *
 					opts.lineHeight +
 
-				opts.lineHeight /
-					2 -
+				opts.lineHeight / 2 -
 
 				opts.strings.length *
-					opts.lineHeight /
-					2
+					opts.lineHeight / 2
+
 			)
+
 		);
+
 	}
+
 }
 
 
+// ======================================================
+// INICIAR
+// ======================================================
 
 anim();
 
 
+// ======================================================
+// RESPONSIVE
+// ======================================================
 
 window.addEventListener(
 	'resize',
@@ -1178,5 +1180,6 @@ window.addEventListener(
 		ctx.font =
 			opts.charSize +
 			'px Verdana';
+
 	}
 );
