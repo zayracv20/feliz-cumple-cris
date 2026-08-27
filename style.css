@@ -25,3 +25,35 @@ p > a:first-of-type {
 body {
 	overflow: hidden;
 }
+#edad {
+    position: absolute;
+
+    left: 50%;
+    top: calc(50% + 28px);
+
+    transform: translate(-50%, -50%);
+
+    font-family: Verdana, sans-serif;
+    font-size: 75px;
+    font-weight: bold;
+
+    background: linear-gradient(
+        90deg,
+        #8c63ff,
+        #f060cf,
+        #ff8b63,
+        #f2e767,
+        #73e66f,
+        #66e4db
+    );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+
+    z-index: 10;
+
+    pointer-events: none;
+}
