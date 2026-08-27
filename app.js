@@ -1,1185 +1,1164 @@
 var c = document.getElementById('c');
+var edad = document.getElementById('edad');
 
-// ======================================================
-// NÚMERO 26
-// Se crea desde JavaScript para garantizar que sea visible
-// ======================================================
+var edadEstado = 'esperando';
 
-var edad = document.createElement('div');
+edad.classList.remove('visible', 'volando');
 
-edad.textContent = '26';
-
-edad.style.position = 'fixed';
-edad.style.left = '50%';
-edad.style.top = 'calc(50% + 28px)';
-edad.style.transform = 'translate(-50%, -50%)';
-
-edad.style.fontFamily = 'Verdana, sans-serif';
-edad.style.fontSize = '75px';
-edad.style.fontWeight = 'bold';
-
-edad.style.background =
-	'linear-gradient(90deg, #8c63ff, #f060cf, #ff8b63, #f2e767, #73e66f, #66e4db)';
-
-edad.style.webkitBackgroundClip = 'text';
-edad.style.backgroundClip = 'text';
-
-edad.style.webkitTextFillColor = 'transparent';
-edad.style.color = 'transparent';
-
-edad.style.zIndex = '9999';
-edad.style.pointerEvents = 'none';
-
-document.body.appendChild(edad);
-
-
-// ======================================================
-// CANVAS
-// ======================================================
 
 var w = c.width = window.innerWidth,
-	h = c.height = window.innerHeight,
-	ctx = c.getContext('2d'),
+    h = c.height = window.innerHeight,
+    ctx = c.getContext('2d'),
 
-	hw = w / 2,
-	hh = h / 2,
+    hw = w / 2,
+    hh = h / 2,
 
-	opts = {
+    opts = {
 
-		strings: ['FELIZ', 'CUMPLE', '', 'CRIS♥'],
+        strings: ['FELIZ', 'CUMPLE', '', 'CRIS♥'],
 
-		charSize: 30,
-		charSpacing: 35,
-		lineHeight: 55,
+        charSize: 30,
+        charSpacing: 35,
+        lineHeight: 55,
 
-		fireworkPrevPoints: 10,
-		fireworkBaseLineWidth: 5,
-		fireworkAddedLineWidth: 8,
+        fireworkPrevPoints: 10,
+        fireworkBaseLineWidth: 5,
+        fireworkAddedLineWidth: 8,
 
-		fireworkSpawnTime: 200,
+        fireworkSpawnTime: 200,
 
-		fireworkBaseReachTime: 30,
-		fireworkAddedReachTime: 30,
+        fireworkBaseReachTime: 30,
+        fireworkAddedReachTime: 30,
 
-		fireworkCircleBaseSize: 20,
-		fireworkCircleAddedSize: 10,
+        fireworkCircleBaseSize: 20,
+        fireworkCircleAddedSize: 10,
 
-		fireworkCircleBaseTime: 30,
-		fireworkCircleAddedTime: 30,
+        fireworkCircleBaseTime: 30,
+        fireworkCircleAddedTime: 30,
 
-		fireworkCircleFadeBaseTime: 10,
-		fireworkCircleFadeAddedTime: 5,
+        fireworkCircleFadeBaseTime: 10,
+        fireworkCircleFadeAddedTime: 5,
 
-		fireworkBaseShards: 5,
-		fireworkAddedShards: 5,
+        fireworkBaseShards: 5,
+        fireworkAddedShards: 5,
 
-		fireworkShardPrevPoints: 3,
+        fireworkShardPrevPoints: 3,
 
-		fireworkShardBaseVel: 4,
-		fireworkShardAddedVel: 2,
+        fireworkShardBaseVel: 4,
+        fireworkShardAddedVel: 2,
 
-		fireworkShardBaseSize: 3,
-		fireworkShardAddedSize: 3,
+        fireworkShardBaseSize: 3,
+        fireworkShardAddedSize: 3,
 
-		gravity: .1,
-		upFlow: -.1,
+        gravity: .1,
+        upFlow: -.1,
 
-		letterContemplatingWaitTime: 360,
+        letterContemplatingWaitTime: 360,
 
-		balloonSpawnTime: 20,
+        balloonSpawnTime: 20,
 
-		balloonBaseInflateTime: 10,
-		balloonAddedInflateTime: 10,
+        balloonBaseInflateTime: 10,
+        balloonAddedInflateTime: 10,
 
-		balloonBaseSize: 20,
-		balloonAddedSize: 20,
+        balloonBaseSize: 20,
+        balloonAddedSize: 20,
 
-		balloonBaseVel: .4,
-		balloonAddedVel: .4,
+        balloonBaseVel: .4,
+        balloonAddedVel: .4,
 
-		balloonBaseRadian: -(Math.PI / 2 - .5),
-		balloonAddedRadian: -1
-	},
+        balloonBaseRadian: -(Math.PI / 2 - .5),
+        balloonAddedRadian: -1
+    },
 
-	calc = {
+    calc = {
 
-		totalWidth:
-			opts.charSpacing *
-			Math.max(
-				opts.strings[0].length,
-				opts.strings[1].length
-			)
+        totalWidth:
+            opts.charSpacing *
+            Math.max(
+                opts.strings[0].length,
+                opts.strings[1].length
+            )
+    },
 
-	},
+    Tau = Math.PI * 2,
+    TauQuarter = Tau / 4,
 
-	Tau = Math.PI * 2,
-	TauQuarter = Tau / 4,
-
-	letters = [];
+    letters = [];
 
 
 ctx.font = opts.charSize + 'px Verdana';
 
 
-// ======================================================
-// LETRAS
-// ======================================================
-
 function Letter(char, x, y) {
 
-	this.char = char;
+    this.char = char;
 
-	this.x = x;
-	this.y = y;
+    this.x = x;
+    this.y = y;
 
-	this.dx = -ctx.measureText(char).width / 2;
-	this.dy = +opts.charSize / 2;
+    this.dx = -ctx.measureText(char).width / 2;
+    this.dy = +opts.charSize / 2;
 
-	this.fireworkDy = this.y - hh;
+    this.fireworkDy = this.y - hh;
 
-	var hue = x / calc.totalWidth * 360;
+    var hue = x / calc.totalWidth * 360;
 
-	this.color =
-		'hsl(hue,80%,50%)'
-			.replace('hue', hue);
+    this.color =
+        'hsl(hue,80%,50%)'
+            .replace('hue', hue);
 
-	this.lightAlphaColor =
-		'hsla(hue,80%,light%,alp)'
-			.replace('hue', hue);
+    this.lightAlphaColor =
+        'hsla(hue,80%,light%,alp)'
+            .replace('hue', hue);
 
-	this.lightColor =
-		'hsl(hue,80%,light%)'
-			.replace('hue', hue);
+    this.lightColor =
+        'hsl(hue,80%,light%)'
+            .replace('hue', hue);
 
-	this.alphaColor =
-		'hsla(hue,80%,50%,alp)'
-			.replace('hue', hue);
+    this.alphaColor =
+        'hsla(hue,80%,50%,alp)'
+            .replace('hue', hue);
 
-	this.reset();
+    this.reset();
 }
 
 
-// ======================================================
-// RESET LETRAS
-// ======================================================
-
 Letter.prototype.reset = function() {
 
-	this.phase = 'firework';
+    this.phase = 'firework';
 
-	this.tick = 0;
+    this.tick = 0;
 
-	this.spawned = false;
+    this.spawned = false;
 
-	this.spawningTime =
-		opts.fireworkSpawnTime *
-		Math.random() | 0;
+    this.spawningTime =
+        opts.fireworkSpawnTime *
+        Math.random() | 0;
 
-	this.reachTime =
-		opts.fireworkBaseReachTime +
-		opts.fireworkAddedReachTime *
-		Math.random() | 0;
+    this.reachTime =
+        opts.fireworkBaseReachTime +
+        opts.fireworkAddedReachTime *
+        Math.random() | 0;
 
-	this.lineWidth =
-		opts.fireworkBaseLineWidth +
-		opts.fireworkAddedLineWidth *
-		Math.random();
+    this.lineWidth =
+        opts.fireworkBaseLineWidth +
+        opts.fireworkAddedLineWidth *
+        Math.random();
 
-	this.prevPoints = [
-		[0, hh, 0]
-	];
+    this.prevPoints = [
+        [0, hh, 0]
+    ];
 
 };
 
-
-// ======================================================
-// ANIMACIÓN DE LAS LETRAS
-// ======================================================
 
 Letter.prototype.step = function() {
 
-	if (this.phase === 'firework') {
+    if (this.phase === 'firework') {
 
-		if (!this.spawned) {
+        if (!this.spawned) {
 
-			++this.tick;
+            ++this.tick;
 
-			if (this.tick >= this.spawningTime) {
+            if (this.tick >= this.spawningTime) {
 
-				this.tick = 0;
-				this.spawned = true;
+                this.tick = 0;
+                this.spawned = true;
 
-			}
+            }
 
-		} else {
+        } else {
 
-			++this.tick;
+            ++this.tick;
 
-			var linearProportion =
-					this.tick / this.reachTime,
+            var linearProportion =
+                    this.tick / this.reachTime,
 
-				armonicProportion =
-					Math.sin(
-						linearProportion *
-						TauQuarter
-					),
+                armonicProportion =
+                    Math.sin(
+                        linearProportion *
+                        TauQuarter
+                    ),
 
-				x =
-					linearProportion *
-					this.x,
+                x =
+                    linearProportion *
+                    this.x,
 
-				y =
-					hh +
-					armonicProportion *
-					this.fireworkDy;
+                y =
+                    hh +
+                    armonicProportion *
+                    this.fireworkDy;
 
 
-			if (
-				this.prevPoints.length >
-				opts.fireworkPrevPoints
-			) {
+            if (
+                this.prevPoints.length >
+                opts.fireworkPrevPoints
+            ) {
 
-				this.prevPoints.shift();
+                this.prevPoints.shift();
 
-			}
+            }
 
 
-			this.prevPoints.push([
+            this.prevPoints.push([
+                x,
+                y,
+                linearProportion *
+                this.lineWidth
+            ]);
 
-				x,
-				y,
 
-				linearProportion *
-				this.lineWidth
+            var lineWidthProportion =
+                1 /
+                (this.prevPoints.length - 1);
 
-			]);
 
+            for (
+                var i = 1;
+                i < this.prevPoints.length;
+                ++i
+            ) {
 
-			var lineWidthProportion =
-				1 /
-				(this.prevPoints.length - 1);
+                var point =
+                        this.prevPoints[i],
 
+                    point2 =
+                        this.prevPoints[i - 1];
 
-			for (
-				var i = 1;
-				i < this.prevPoints.length;
-				++i
-			) {
 
-				var point =
-						this.prevPoints[i],
+                ctx.strokeStyle =
+                    this.alphaColor.replace(
+                        'alp',
+                        i / this.prevPoints.length
+                    );
 
-					point2 =
-						this.prevPoints[i - 1];
 
+                ctx.lineWidth =
+                    point[2] *
+                    lineWidthProportion *
+                    i;
 
-				ctx.strokeStyle =
-					this.alphaColor.replace(
-						'alp',
-						i / this.prevPoints.length
-					);
 
+                ctx.beginPath();
 
-				ctx.lineWidth =
-					point[2] *
-					lineWidthProportion *
-					i;
+                ctx.moveTo(
+                    point[0],
+                    point[1]
+                );
 
+                ctx.lineTo(
+                    point2[0],
+                    point2[1]
+                );
 
-				ctx.beginPath();
+                ctx.stroke();
 
-				ctx.moveTo(
-					point[0],
-					point[1]
-				);
+            }
 
-				ctx.lineTo(
-					point2[0],
-					point2[1]
-				);
 
-				ctx.stroke();
+            if (
+                this.tick >=
+                this.reachTime
+            ) {
 
-			}
+                this.phase = 'contemplate';
 
 
-			if (
-				this.tick >=
-				this.reachTime
-			) {
+                this.circleFinalSize =
+                    opts.fireworkCircleBaseSize +
+                    opts.fireworkCircleAddedSize *
+                    Math.random();
 
-				this.phase = 'contemplate';
 
+                this.circleCompleteTime =
+                    opts.fireworkCircleBaseTime +
+                    opts.fireworkCircleAddedTime *
+                    Math.random() | 0;
 
-				this.circleFinalSize =
-					opts.fireworkCircleBaseSize +
-					opts.fireworkCircleAddedSize *
-					Math.random();
 
+                this.circleCreating = true;
+                this.circleFading = false;
 
-				this.circleCompleteTime =
-					opts.fireworkCircleBaseTime +
-					opts.fireworkCircleAddedTime *
-					Math.random() | 0;
 
+                this.circleFadeTime =
+                    opts.fireworkCircleFadeBaseTime +
+                    opts.fireworkCircleFadeAddedTime *
+                    Math.random() | 0;
 
-				this.circleCreating = true;
-				this.circleFading = false;
 
+                this.tick = 0;
+                this.tick2 = 0;
 
-				this.circleFadeTime =
-					opts.fireworkCircleFadeBaseTime +
-					opts.fireworkCircleFadeAddedTime *
-					Math.random() | 0;
+                this.shards = [];
 
 
-				this.tick = 0;
-				this.tick2 = 0;
+                var shardCount =
+                        opts.fireworkBaseShards +
+                        opts.fireworkAddedShards *
+                        Math.random() | 0,
 
-				this.shards = [];
+                    angle =
+                        Tau / shardCount,
 
+                    cos =
+                        Math.cos(angle),
 
-				var shardCount =
-						opts.fireworkBaseShards +
-						opts.fireworkAddedShards *
-						Math.random() | 0,
+                    sin =
+                        Math.sin(angle),
 
-					angle =
-						Tau / shardCount,
+                    x = 1,
+                    y = 0;
 
-					cos =
-						Math.cos(angle),
 
-					sin =
-						Math.sin(angle),
+                for (
+                    var i = 0;
+                    i < shardCount;
+                    ++i
+                ) {
 
-					x = 1,
-					y = 0;
+                    var x1 = x;
 
+                    x =
+                        x * cos -
+                        y * sin;
 
-				for (
-					var i = 0;
-					i < shardCount;
-					++i
-				) {
+                    y =
+                        y * cos +
+                        x1 * sin;
 
-					var x1 = x;
 
-					x =
-						x * cos -
-						y * sin;
+                    this.shards.push(
 
-					y =
-						y * cos +
-						x1 * sin;
+                        new Shard(
+                            this.x,
+                            this.y,
+                            x,
+                            y,
+                            this.alphaColor
+                        )
 
+                    );
 
-					this.shards.push(
+                }
 
-						new Shard(
-							this.x,
-							this.y,
-							x,
-							y,
-							this.alphaColor
-						)
+            }
 
-					);
+        }
 
-				}
 
-			}
+    } else if (
+        this.phase === 'contemplate'
+    ) {
 
-		}
+        ++this.tick;
 
 
-	} else if (
-		this.phase === 'contemplate'
-	) {
+        if (
+            this.circleCreating
+        ) {
 
-		++this.tick;
+            ++this.tick2;
 
 
-		if (
-			this.circleCreating
-		) {
+            var proportion =
+                    this.tick2 /
+                    this.circleCompleteTime,
 
-			++this.tick2;
+                armonic =
+                    -Math.cos(
+                        proportion *
+                        Math.PI
+                    ) / 2 + .5;
 
 
-			var proportion =
-					this.tick2 /
-					this.circleCompleteTime,
+            ctx.beginPath();
 
-				armonic =
-					-Math.cos(
-						proportion *
-						Math.PI
-					) / 2 + .5;
 
+            ctx.fillStyle =
+                this.lightAlphaColor
 
-			ctx.beginPath();
+                    .replace(
+                        'light',
+                        50 +
+                        50 *
+                        proportion
+                    )
 
+                    .replace(
+                        'alp',
+                        proportion
+                    );
 
-			ctx.fillStyle =
-				this.lightAlphaColor
 
-					.replace(
-						'light',
-						50 +
-						50 *
-						proportion
-					)
+            ctx.arc(
+                this.x,
+                this.y,
 
-					.replace(
-						'alp',
-						proportion
-					);
+                armonic *
+                this.circleFinalSize,
 
+                0,
+                Tau
+            );
 
-			ctx.arc(
-				this.x,
-				this.y,
 
-				armonic *
-				this.circleFinalSize,
+            ctx.fill();
 
-				0,
-				Tau
-			);
 
+            if (
+                this.tick2 >
+                this.circleCompleteTime
+            ) {
 
-			ctx.fill();
+                this.tick2 = 0;
 
+                this.circleCreating = false;
+                this.circleFading = true;
 
-			if (
-				this.tick2 >
-				this.circleCompleteTime
-			) {
+            }
 
-				this.tick2 = 0;
 
-				this.circleCreating = false;
-				this.circleFading = true;
+        } else if (
+            this.circleFading
+        ) {
 
-			}
+            ctx.fillStyle =
+                this.lightColor.replace(
+                    'light',
+                    70
+                );
 
 
-		} else if (
-			this.circleFading
-		) {
+            ctx.fillText(
+                this.char,
+                this.x + this.dx,
+                this.y + this.dy
+            );
 
-			ctx.fillStyle =
-				this.lightColor.replace(
-					'light',
-					70
-				);
 
+            ++this.tick2;
 
-			ctx.fillText(
-				this.char,
-				this.x + this.dx,
-				this.y + this.dy
-			);
 
+            var proportion =
+                    this.tick2 /
+                    this.circleFadeTime,
 
-			++this.tick2;
+                armonic =
+                    -Math.cos(
+                        proportion *
+                        Math.PI
+                    ) / 2 + .5;
 
 
-			var proportion =
-					this.tick2 /
-					this.circleFadeTime,
+            ctx.beginPath();
 
-				armonic =
-					-Math.cos(
-						proportion *
-						Math.PI
-					) / 2 + .5;
 
+            ctx.fillStyle =
+                this.lightAlphaColor
 
-			ctx.beginPath();
+                    .replace(
+                        'light',
+                        100
+                    )
 
+                    .replace(
+                        'alp',
+                        1 - armonic
+                    );
 
-			ctx.fillStyle =
-				this.lightAlphaColor
 
-					.replace(
-						'light',
-						100
-					)
+            ctx.arc(
+                this.x,
+                this.y,
 
-					.replace(
-						'alp',
-						1 - armonic
-					);
+                this.circleFinalSize,
 
+                0,
+                Tau
+            );
 
-			ctx.arc(
 
-				this.x,
-				this.y,
+            ctx.fill();
 
-				this.circleFinalSize,
 
-				0,
-				Tau
+            if (
+                this.tick2 >=
+                this.circleFadeTime
+            ) {
 
-			);
+                this.circleFading = false;
 
+            }
 
-			ctx.fill();
 
+        } else {
 
-			if (
-				this.tick2 >=
-				this.circleFadeTime
-			) {
+            ctx.fillStyle =
+                this.lightColor.replace(
+                    'light',
+                    70
+                );
 
-				this.circleFading = false;
 
-			}
+            ctx.fillText(
+                this.char,
+                this.x + this.dx,
+                this.y + this.dy
+            );
 
+        }
 
-		} else {
 
-			ctx.fillStyle =
-				this.lightColor.replace(
-					'light',
-					70
-				);
+        for (
+            var i = 0;
+            i < this.shards.length;
+            ++i
+        ) {
 
+            this.shards[i].step();
 
-			ctx.fillText(
-				this.char,
-				this.x + this.dx,
-				this.y + this.dy
-			);
 
-		}
+            if (
+                !this.shards[i].alive
+            ) {
 
+                this.shards.splice(i, 1);
 
-		for (
-			var i = 0;
-			i < this.shards.length;
-			++i
-		) {
+                --i;
 
-			this.shards[i].step();
+            }
 
+        }
 
-			if (
-				!this.shards[i].alive
-			) {
 
-				this.shards.splice(i, 1);
+        if (
+            this.tick >
+            opts.letterContemplatingWaitTime
+        ) {
 
-				--i;
+            this.phase = 'balloon';
 
-			}
+            this.tick = 0;
 
-		}
+            this.spawning = true;
 
+            this.spawnTime =
+                opts.balloonSpawnTime *
+                Math.random() | 0;
 
-		if (
-			this.tick >
-			opts.letterContemplatingWaitTime
-		) {
+            this.inflating = false;
 
-			this.phase = 'balloon';
+            this.inflateTime =
+                opts.balloonBaseInflateTime +
+                opts.balloonAddedInflateTime *
+                Math.random() | 0;
 
-			this.tick = 0;
+            this.size =
+                opts.balloonBaseSize +
+                opts.balloonAddedSize *
+                Math.random() | 0;
 
-			this.spawning = true;
 
-			this.spawnTime =
-				opts.balloonSpawnTime *
-				Math.random() | 0;
+            var rad =
+                    opts.balloonBaseRadian +
+                    opts.balloonAddedRadian *
+                    Math.random(),
 
-			this.inflating = false;
+                vel =
+                    opts.balloonBaseVel +
+                    opts.balloonAddedVel *
+                    Math.random();
 
-			this.inflateTime =
-				opts.balloonBaseInflateTime +
-				opts.balloonAddedInflateTime *
-				Math.random() | 0;
 
-			this.size =
-				opts.balloonBaseSize +
-				opts.balloonAddedSize *
-				Math.random() | 0;
+            this.vx =
+                Math.cos(rad) *
+                vel;
 
+            this.vy =
+                Math.sin(rad) *
+                vel;
 
-			var rad =
-					opts.balloonBaseRadian +
-					opts.balloonAddedRadian *
-					Math.random(),
+        }
 
-				vel =
-					opts.balloonBaseVel +
-					opts.balloonAddedVel *
-					Math.random();
 
+    } else if (
+        this.phase === 'balloon'
+    ) {
 
-			this.vx =
-				Math.cos(rad) *
-					vel;
+        ctx.strokeStyle =
+            this.lightColor.replace(
+                'light',
+                80
+            );
 
-			this.vy =
-				Math.sin(rad) *
-					vel;
 
-		}
+        if (
+            this.spawning
+        ) {
 
+            ++this.tick;
 
-	} else if (
-		this.phase === 'balloon'
-	) {
 
-		ctx.strokeStyle =
-			this.lightColor.replace(
-				'light',
-				80
-			);
+            ctx.fillStyle =
+                this.lightColor.replace(
+                    'light',
+                    70
+                );
 
 
-		if (
-			this.spawning
-		) {
+            ctx.fillText(
+                this.char,
+                this.x + this.dx,
+                this.y + this.dy
+            );
 
-			++this.tick;
 
+            if (
+                this.tick >=
+                this.spawnTime
+            ) {
 
-			ctx.fillStyle =
-				this.lightColor.replace(
-					'light',
-					70
-				);
+                this.tick = 0;
 
+                this.spawning = false;
+                this.inflating = true;
 
-			ctx.fillText(
-				this.char,
-				this.x + this.dx,
-				this.y + this.dy
-			);
+            }
 
 
-			if (
-				this.tick >=
-				this.spawnTime
-			) {
+        } else if (
+            this.inflating
+        ) {
 
-				this.tick = 0;
+            ++this.tick;
 
-				this.spawning = false;
-				this.inflating = true;
 
-			}
+            var proportion =
+                    this.tick /
+                    this.inflateTime,
 
+                x =
+                    this.cx =
+                    this.x,
 
-		} else if (
-			this.inflating
-		) {
+                y =
+                    this.cy =
+                    this.y -
+                    this.size *
+                    proportion;
 
-			++this.tick;
 
+            ctx.fillStyle =
+                this.alphaColor.replace(
+                    'alp',
+                    proportion
+                );
 
-			var proportion =
-					this.tick /
-					this.inflateTime,
 
-				x =
-					this.cx =
-						this.x,
+            ctx.beginPath();
 
-				y =
-					this.cy =
-						this.y -
-						this.size *
-						proportion;
 
+            generateBalloonPath(
+                x,
+                y,
+                this.size *
+                proportion
+            );
 
-			ctx.fillStyle =
-				this.alphaColor.replace(
-					'alp',
-					proportion
-				);
 
+            ctx.fill();
 
-			ctx.beginPath();
 
+            ctx.beginPath();
 
-			generateBalloonPath(
+            ctx.moveTo(x, y);
 
-				x,
-				y,
+            ctx.lineTo(
+                x,
+                this.y
+            );
 
-				this.size *
-					proportion
+            ctx.stroke();
 
-			);
 
+            ctx.fillStyle =
+                this.lightColor.replace(
+                    'light',
+                    70
+                );
 
-			ctx.fill();
 
+            ctx.fillText(
+                this.char,
+                this.x + this.dx,
+                this.y + this.dy
+            );
 
-			ctx.beginPath();
 
-			ctx.moveTo(x, y);
+            if (
+                this.tick >=
+                this.inflateTime
+            ) {
 
-			ctx.lineTo(
-				x,
-				this.y
-			);
+                this.tick = 0;
 
-			ctx.stroke();
+                this.inflating = false;
 
+            }
 
-			ctx.fillStyle =
-				this.lightColor.replace(
-					'light',
-					70
-				);
 
+        } else {
 
-			ctx.fillText(
-				this.char,
-				this.x + this.dx,
-				this.y + this.dy
-			);
+            this.cx += this.vx;
 
+            this.cy +=
+                this.vy +=
+                opts.upFlow;
 
-			if (
-				this.tick >=
-				this.inflateTime
-			) {
 
-				this.tick = 0;
+            ctx.fillStyle =
+                this.color;
 
-				this.inflating = false;
 
-			}
+            ctx.beginPath();
 
 
-		} else {
+            generateBalloonPath(
+                this.cx,
+                this.cy,
+                this.size
+            );
 
-			this.cx += this.vx;
 
-			this.cy +=
-				this.vy +=
-					opts.upFlow;
+            ctx.fill();
 
 
-			ctx.fillStyle =
-				this.color;
+            ctx.beginPath();
 
+            ctx.moveTo(
+                this.cx,
+                this.cy
+            );
 
-			ctx.beginPath();
+            ctx.lineTo(
+                this.cx,
+                this.cy + this.size
+            );
 
+            ctx.stroke();
 
-			generateBalloonPath(
-				this.cx,
-				this.cy,
-				this.size
-			);
 
+            ctx.fillStyle =
+                this.lightColor.replace(
+                    'light',
+                    70
+                );
 
-			ctx.fill();
 
+            ctx.fillText(
+                this.char,
 
-			ctx.beginPath();
+                this.cx +
+                this.dx,
 
-			ctx.moveTo(
-				this.cx,
-				this.cy
-			);
+                this.cy +
+                this.dy +
+                this.size
+            );
 
-			ctx.lineTo(
-				this.cx,
-				this.cy + this.size
-			);
 
-			ctx.stroke();
+            if (
+                this.cy +
+                this.size <
+                -hh ||
 
+                this.cx <
+                -hw ||
 
-			ctx.fillStyle =
-				this.lightColor.replace(
-					'light',
-					70
-				);
+                this.cy >
+                hw
+            ) {
 
+                this.phase = 'done';
 
-			ctx.fillText(
-				this.char,
+            }
 
-				this.cx +
-					this.dx,
+        }
 
-				this.cy +
-					this.dy +
-					this.size
-			);
-
-
-			if (
-
-				this.cy +
-					this.size <
-					-hh ||
-
-				this.cx <
-					-hw ||
-
-				this.cy >
-					hw
-
-			) {
-
-				this.phase = 'done';
-
-			}
-
-		}
-
-	}
+    }
 
 };
 
 
-// ======================================================
-// PARTÍCULAS
-// ======================================================
-
 function Shard(
-	x,
-	y,
-	vx,
-	vy,
-	color
+    x,
+    y,
+    vx,
+    vy,
+    color
 ) {
 
-	var vel =
-		opts.fireworkShardBaseVel +
-		opts.fireworkShardAddedVel *
-			Math.random();
+    var vel =
+        opts.fireworkShardBaseVel +
+        opts.fireworkShardAddedVel *
+        Math.random();
 
 
-	this.vx =
-		vx * vel;
+    this.vx =
+        vx * vel;
 
-	this.vy =
-		vy * vel;
-
-
-	this.x = x;
-	this.y = y;
+    this.vy =
+        vy * vel;
 
 
-	this.prevPoints = [
-		[x, y]
-	];
+    this.x = x;
+    this.y = y;
 
 
-	this.color = color;
+    this.prevPoints = [
+        [x, y]
+    ];
 
-	this.alive = true;
+
+    this.color = color;
+
+    this.alive = true;
 
 
-	this.size =
-		opts.fireworkShardBaseSize +
-		opts.fireworkShardAddedSize *
-			Math.random();
+    this.size =
+        opts.fireworkShardBaseSize +
+        opts.fireworkShardAddedSize *
+        Math.random();
 
 }
 
 
 Shard.prototype.step = function() {
 
-	this.x += this.vx;
+    this.x += this.vx;
 
-	this.y +=
-		this.vy +=
-			opts.gravity;
-
-
-	if (
-		this.prevPoints.length >
-		opts.fireworkShardPrevPoints
-	) {
-
-		this.prevPoints.shift();
-
-	}
+    this.y +=
+        this.vy +=
+        opts.gravity;
 
 
-	this.prevPoints.push([
-		this.x,
-		this.y
-	]);
+    if (
+        this.prevPoints.length >
+        opts.fireworkShardPrevPoints
+    ) {
+
+        this.prevPoints.shift();
+
+    }
 
 
-	var lineWidthProportion =
-		this.size /
-		this.prevPoints.length;
+    this.prevPoints.push([
+        this.x,
+        this.y
+    ]);
 
 
-	for (
-		var k = 0;
-		k <
-		this.prevPoints.length - 1;
-		++k
-	) {
-
-		var point =
-				this.prevPoints[k],
-
-			point2 =
-				this.prevPoints[k + 1];
+    var lineWidthProportion =
+        this.size /
+        this.prevPoints.length;
 
 
-		ctx.strokeStyle =
-			this.color.replace(
-				'alp',
-				k /
-				this.prevPoints.length
-			);
+    for (
+        var k = 0;
+        k <
+        this.prevPoints.length - 1;
+        ++k
+    ) {
+
+        var point =
+                this.prevPoints[k],
+
+            point2 =
+                this.prevPoints[k + 1];
 
 
-		ctx.lineWidth =
-			k *
-			lineWidthProportion;
+        ctx.strokeStyle =
+            this.color.replace(
+                'alp',
+                k /
+                this.prevPoints.length
+            );
 
 
-		ctx.beginPath();
-
-		ctx.moveTo(
-			point[0],
-			point[1]
-		);
-
-		ctx.lineTo(
-			point2[0],
-			point2[1]
-		);
-
-		ctx.stroke();
-
-	}
+        ctx.lineWidth =
+            k *
+            lineWidthProportion;
 
 
-	if (
-		this.prevPoints[0][1] >
-		hh
-	) {
+        ctx.beginPath();
 
-		this.alive = false;
+        ctx.moveTo(
+            point[0],
+            point[1]
+        );
 
-	}
+        ctx.lineTo(
+            point2[0],
+            point2[1]
+        );
+
+        ctx.stroke();
+
+    }
+
+
+    if (
+        this.prevPoints[0][1] >
+        hh
+    ) {
+
+        this.alive = false;
+
+    }
 
 };
 
 
-// ======================================================
-// GLOBOS
-// ======================================================
-
 function generateBalloonPath(
-	x,
-	y,
-	size
+    x,
+    y,
+    size
 ) {
 
-	ctx.moveTo(
-		x,
-		y
-	);
+    ctx.moveTo(
+        x,
+        y
+    );
 
 
-	ctx.bezierCurveTo(
+    ctx.bezierCurveTo(
 
-		x - size / 2,
-		y - size / 2,
+        x - size / 2,
+        y - size / 2,
 
-		x - size / 4,
-		y - size,
+        x - size / 4,
+        y - size,
 
-		x,
-		y - size
+        x,
+        y - size
 
-	);
+    );
 
 
-	ctx.bezierCurveTo(
+    ctx.bezierCurveTo(
 
-		x + size / 4,
-		y - size,
+        x + size / 4,
+        y - size,
 
-		x + size / 2,
-		y - size / 2,
+        x + size / 2,
+        y - size / 2,
 
-		x,
-		y
+        x,
+        y
 
-	);
+    );
 
 }
 
-
-// ======================================================
-// ANIMACIÓN PRINCIPAL
-// ======================================================
 
 function anim() {
 
-	window.requestAnimationFrame(anim);
+    window.requestAnimationFrame(anim);
 
 
-	ctx.fillStyle = '#111';
+    ctx.fillStyle = '#111';
 
 
-	ctx.fillRect(
-		0,
-		0,
-		w,
-		h
-	);
+    ctx.fillRect(
+        0,
+        0,
+        w,
+        h
+    );
 
 
-	ctx.translate(
-		hw,
-		hh
-	);
+    ctx.translate(
+        hw,
+        hh
+    );
 
 
-	var done = true;
+    var done = true;
+
+    var letrasFormadas = true;
+    var algunaEnGlobo = false;
 
 
-	for (
-		var l = 0;
-		l < letters.length;
-		++l
-	) {
+    for (
+        var l = 0;
+        l < letters.length;
+        ++l
+    ) {
 
-		letters[l].step();
-
-
-		if (
-			letters[l].phase !==
-			'done'
-		) {
-
-			done = false;
-
-		}
-
-	}
+        letters[l].step();
 
 
-	ctx.translate(
-		-hw,
-		-hh
-	);
+        if (
+            letters[l].phase !== 'done'
+        ) {
+
+            done = false;
+
+        }
 
 
-	if (done) {
+        if (
+            letters[l].phase === 'firework'
+        ) {
 
-		for (
-			var l = 0;
-			l < letters.length;
-			++l
-		) {
+            letrasFormadas = false;
 
-			letters[l].reset();
+        }
 
-		}
 
-	}
+        if (
+            letters[l].phase === 'balloon'
+        ) {
+
+            algunaEnGlobo = true;
+
+        }
+
+    }
+
+
+    if (
+        letrasFormadas &&
+        !algunaEnGlobo &&
+        edadEstado === 'esperando'
+    ) {
+
+        edad.classList.remove('volando');
+
+        edad.classList.add('visible');
+
+        edadEstado = 'visible';
+
+    }
+
+
+    if (
+        algunaEnGlobo &&
+        edadEstado === 'visible'
+    ) {
+
+        edad.classList.remove('visible');
+
+        edad.classList.add('volando');
+
+        edadEstado = 'volando';
+
+    }
+
+
+    ctx.translate(
+        -hw,
+        -hh
+    );
+
+
+    if (done) {
+
+        for (
+            var l = 0;
+            l < letters.length;
+            ++l
+        ) {
+
+            letters[l].reset();
+
+        }
+
+
+        edad.classList.remove(
+            'visible',
+            'volando'
+        );
+
+        edadEstado = 'esperando';
+
+    }
 
 }
 
-
-// ======================================================
-// CREAR LAS LETRAS
-// ======================================================
 
 for (
-	var i = 0;
-	i < opts.strings.length;
-	++i
+    var i = 0;
+    i < opts.strings.length;
+    ++i
 ) {
 
-	for (
-		var j = 0;
-		j < opts.strings[i].length;
-		++j
-	) {
+    for (
+        var j = 0;
+        j < opts.strings[i].length;
+        ++j
+    ) {
 
-		letters.push(
+        letters.push(
 
-			new Letter(
+            new Letter(
 
-				opts.strings[i][j],
+                opts.strings[i][j],
 
-				j *
-					opts.charSpacing +
+                j *
+                opts.charSpacing +
 
-				opts.charSpacing / 2 -
+                opts.charSpacing / 2 -
 
-				opts.strings[i].length *
-					opts.charSize / 2,
+                opts.strings[i].length *
+                opts.charSize / 2,
 
 
-				i *
-					opts.lineHeight +
+                i *
+                opts.lineHeight +
 
-				opts.lineHeight / 2 -
+                opts.lineHeight / 2 -
 
-				opts.strings.length *
-					opts.lineHeight / 2
+                opts.strings.length *
+                opts.lineHeight / 2
 
-			)
+            )
 
-		);
+        );
 
-	}
+    }
 
 }
 
-
-// ======================================================
-// INICIAR
-// ======================================================
 
 anim();
 
 
-// ======================================================
-// RESPONSIVE
-// ======================================================
-
 window.addEventListener(
-	'resize',
-	function() {
+    'resize',
+    function() {
 
-		w =
-			c.width =
-				window.innerWidth;
-
-
-		h =
-			c.height =
-				window.innerHeight;
+        w =
+            c.width =
+            window.innerWidth;
 
 
-		hw =
-			w / 2;
+        h =
+            c.height =
+            window.innerHeight;
 
 
-		hh =
-			h / 2;
+        hw =
+            w / 2;
 
 
-		ctx.font =
-			opts.charSize +
-			'px Verdana';
+        hh =
+            h / 2;
 
-	}
+
+        ctx.font =
+            opts.charSize +
+            'px Verdana';
+
+    }
 );
